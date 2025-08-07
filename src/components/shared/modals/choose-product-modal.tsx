@@ -1,28 +1,41 @@
-"use client";
-import { Dialog } from "@/components/ui";
-import React from "react";
-import { Title } from "../title";
-import { cn } from "@/lib/utils";
-import { Product } from "@prisma/client";
-import { DialogContent } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
+'use client';
+
+import { ProductWithRelations } from '@/@types/prisma';
+import { Dialog } from '@/components/ui';
+import { DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { ChooseProductForm } from '../choose-product-form';
+import { ChoosePizzaForm } from '../choose-pizza-form';
 
 interface Props {
-  product: Product;
+  product: ProductWithRelations;
   className?: string;
 }
 
 export const ChooseProductModal: React.FC<Props> = ({ className, product }) => {
   const router = useRouter();
+  const isPizzaForm = Boolean(product.items[0].pizzaType);
   return (
     <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
       <DialogContent
         className={cn(
-          "p-0 w-[1060px] max-w-[1060px] min-h-[500px] bg-white overflow-hidden",
-          className
+          'min-h-[500px] w-[1060px] max-w-[1060px] overflow-hidden bg-white p-0',
+          className,
         )}
       >
-        <Title text={product.name} />
+          <DialogTitle className='sr-only'>{product.name}</DialogTitle>
+        
+        {isPizzaForm ? (
+          <ChoosePizzaForm
+            imageUrl={product.imageUrl}
+            name={product.name}
+            ingredients={product.ingredients}
+            items={product.items}
+          />
+        ) : (
+          <ChooseProductForm imageUrl={product.imageUrl} name={product.name} />
+        )}
       </DialogContent>
     </Dialog>
   );

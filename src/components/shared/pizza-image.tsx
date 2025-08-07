@@ -2,11 +2,11 @@ import { cn } from "@/lib/utils";
 
 interface Props {
   imageUrl: string;
-  size: number;
+  size: 20 | 30 | 40;
   className?: string;
 }
 
-export const ProductImage: React.FC<Props> = ({
+export const PizzaImage: React.FC<Props> = ({
   imageUrl,
   size,
   className,
